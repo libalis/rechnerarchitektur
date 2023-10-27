@@ -1,7 +1,9 @@
 #!/bin/bash -l
-#SBATCH <job argument 0> # e.g. –N 1
-#SBATCH <job argument 1>
-#SBATCH <job argument n>
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --exclusive
+#SBATCH --cpu-freq=2200000
+#SBATCH -t 02:00:00
 
 # Enable debug and verbose mode
 set -x
@@ -11,7 +13,7 @@ set -v
 module load intel
 
 # TODO allocate a compute node
-salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 01:00:00;
+salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
 
 # This line creates / overrides a result csv file
 echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result.csv
@@ -23,14 +25,19 @@ echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result.csv
 # input parameter:
 # to run an executable:
 # 	srun ../bin/vecSum [size of the vector in KiB]
-distribution=1;
 for i in {1..20}; do
-    for (( j=1; j<=32; j++ )); do
-        srun ../bin/main $(( distribution << $j )) 1000 >> result.csv
+    for ((j = 0; j < 32; j++)); do
+        srun ../bin/vecSum $(bc <<< "1.462449973 ^ $j") 1000 >> result.csv
+    done
+done
+
+echo >> result.csv
+
+for i in {1..20}; do
+    for ((j = 0; j < 32; j++)); do
+        srun ../bin/vecSum $((128*1024)) $(bc <<< "1.345962495 ^ $j") >> result.csv
     done
 done
 
 # Note: copy the result.csv to a local machine!
-scp result.csv cu14mowo@cipterm0.cip.cs.fau.de:.
-
 touch ready

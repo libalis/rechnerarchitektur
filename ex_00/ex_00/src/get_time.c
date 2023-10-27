@@ -8,4 +8,3 @@ uint64_t get_time_us(void) {
     clock_gettime(CLOCK_MONOTONIC, &a);
     return (uint64_t) (((double) a.tv_nsec / 1000.0) + ((double) a.tv_sec * (1000.0 * 1000.0)));
 }
-

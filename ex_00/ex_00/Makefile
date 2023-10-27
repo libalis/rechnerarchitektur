@@ -28,4 +28,3 @@ $(BIN_PATH)/vecSum: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/g
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
-

@@ -6,4 +6,3 @@ float vec_sum(float *array, uint32_t length) {
 	for (int i = 0; i < length; i++) ret += array[i];
 	return ret;
 }
-
