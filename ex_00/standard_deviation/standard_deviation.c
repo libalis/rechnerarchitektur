@@ -13,11 +13,11 @@ int main(int argc, char* argv[]) {
     double mean;
     double variance;
     double standard_deviation;
-    double standard_deviation_percentage;
 
     in = fopen("../ex_00/scripts/result.csv", "r");
     out = fopen("standard_deviation.csv", "w");
     index = 0;
+    fprintf(out, "minimalRuntime,standard_deviation\n");
 
     while (fgets(line, 1024, in) != NULL) {
         index++;
@@ -35,8 +35,9 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < 20; i++) variance += (additionsPerSecond[i] - mean) * (additionsPerSecond[i] - mean);
             variance /= 20;
             standard_deviation = sqrt(variance);
-            standard_deviation_percentage = (standard_deviation * 100) / mean;
-            fprintf(out, "minimalRuntime: %lf, standard_deviation_percentage: %lf\n", minimalRuntime, standard_deviation_percentage);
+            standard_deviation *= 100;
+            standard_deviation /= mean;
+            fprintf(out, "%lf,%lf\n", minimalRuntime, standard_deviation);
         }
     }
 
