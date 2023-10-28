@@ -16,8 +16,8 @@ int main(int argc, char* argv[]) {
 
     in = fopen("../ex_00/scripts/result.csv", "r");
     out = fopen("standard_deviation.csv", "w");
-    index = 0;
     fprintf(out, "minimalRuntime,standard_deviation\n");
+    index = 0;
 
     while (fgets(line, 1024, in) != NULL) {
         index++;
