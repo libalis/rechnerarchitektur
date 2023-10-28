@@ -25,17 +25,17 @@ echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result.csv
 # input parameter:
 # to run an executable:
 # 	srun ../bin/vecSum [size of the vector in KiB]
-for i in {1..20}; do
-    for ((j = 0; j < 32; j++)); do
-        srun ../bin/vecSum $(bc <<< "1.462449973 ^ $j") 1000 >> result.csv
+for ((i = 0; i < 32; i++)); do
+    for j in {1..20}; do
+        srun ../bin/vecSum $(bc <<< "1.462449973 ^ $i") 1000 >> result.csv
     done
 done
 
 echo >> result.csv
 
-for i in {1..20}; do
-    for ((j = 0; j < 32; j++)); do
-        srun ../bin/vecSum $((128*1024)) $(bc <<< "1.345962495 ^ $j") >> result.csv
+for ((i = 0; i < 32; i++)); do
+    for j in {1..20}; do
+        srun ../bin/vecSum $((128*1024)) $(bc <<< "1.345962495 ^ $i") >> result.csv
     done
 done
 

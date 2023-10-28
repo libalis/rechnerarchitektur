@@ -47,5 +47,6 @@ int main(int argc, char *argv[]) {
 	adds_per_second = array_size_bytes/(float)sizeof(float)/actual_runtime; // Measured performance as floating point additions per second
 	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 ",%" PRIu64 "\n", array_size_bytes, adds_per_second, actual_runtime, minimal_runtime);
 
+	free(array);
 	return 0;
 }
