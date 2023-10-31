@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// Returns the current system time in milliseconds
+// Returns the current system time in microseconds
 uint64_t get_time_us(void);
 
 #endif

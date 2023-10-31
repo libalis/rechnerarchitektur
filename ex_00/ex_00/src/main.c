@@ -12,7 +12,7 @@ static void usage_msg(void) {
 int main(int argc, char *argv[]) {
 	uint64_t minimal_runtime  = 0u;
 	uint64_t actual_runtime   = 0u;
-	uint64_t array_size_bytes = 0u; // The allocated array size in bytes
+	uint64_t array_size_bytes = 0u;  // The allocated array size in bytes
 	uint64_t runs             = 0u;
 	uint64_t start            = 0u;
 	uint64_t stop             = 0u;
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
 	//TODO: allocate memory and initialize it
 	float *array = malloc(array_size_bytes);
-	for (int i = 0; i < array_size_bytes/(float)sizeof(float); i++) array[i] = i + 0.1f;
+	for (int i = 0; i < array_size_bytes/sizeof(float); i++) array[i] = i + 0.1f;
 
 	//TODO: measurement with a runtime of at least 1 s
 	minimal_runtime = strtold(argv[2], NULL);
@@ -37,14 +37,14 @@ int main(int argc, char *argv[]) {
 		start = get_time_us();
 		for(uint64_t i = 0u; i < runs; i++) {
 			// TODO
-			vec_sum(array, array_size_bytes/(float)sizeof(float));
+			vec_sum(array, array_size_bytes/sizeof(float));
 		}
 		stop  = get_time_us();
 		actual_runtime = stop - start;
 	}
 
 	//TODO: calculate and print
-	adds_per_second = array_size_bytes/(float)sizeof(float)/actual_runtime; // Measured performance as floating point additions per second
+	adds_per_second = ((runs>>1u)*(array_size_bytes/sizeof(float)))/(actual_runtime/1000000.0); // Measured performance as floating point additions per second
 	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 ",%" PRIu64 "\n", array_size_bytes, adds_per_second, actual_runtime, minimal_runtime);
 
 	free(array);
