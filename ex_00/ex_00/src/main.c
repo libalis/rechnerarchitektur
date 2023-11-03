@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
 
 	//TODO: allocate memory and initialize it
 	float *array = malloc(array_size_bytes);
-	for (int i = 0; i < array_size_bytes/sizeof(float); i++) array[i] = i + 0.1f;
+	for (int i = 0; i < array_size_bytes/sizeof(float); i++) array[i] = (float) i;
 
 	//TODO: measurement with a runtime of at least 1 s
-	minimal_runtime = strtold(argv[2], NULL);
+	minimal_runtime = strtold(argv[2], NULL) * 1000;
 
 	for(runs = 1u; actual_runtime < minimal_runtime; runs = runs << 1u) {
 		start = get_time_us();
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	//TODO: calculate and print
-	adds_per_second = ((runs>>1u)*(array_size_bytes/sizeof(float)))/(actual_runtime/1000000.0); // Measured performance as floating point additions per second
+	adds_per_second = ((runs-1)*(array_size_bytes/sizeof(float)))/(actual_runtime/1000000.0); // Measured performance as floating point additions per second
 	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 ",%" PRIu64 "\n", array_size_bytes, adds_per_second, actual_runtime, minimal_runtime);
 
 	free(array);

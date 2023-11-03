@@ -35,7 +35,7 @@ echo >> result.csv
 
 for ((i = 0; i < 32; i++)); do
     for j in {1..20}; do
-        srun ../bin/vecSum $((128*1024)) $(bc <<< "1.345962495 ^ $i") >> result.csv
+        srun ../bin/vecSum $((32*1024)) $(bc <<< "1.345962495 ^ $i") >> result.csv
     done
 done
 
