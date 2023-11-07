@@ -42,8 +42,8 @@ void draw_grid(double* grid, uint32_t x, uint32_t y, const char* filepath) {
     FILE* file = fopen("result.ppm", "w");
     fprintf(file, "P3\n%d %d\n%d\n", x, y, 255);
     for (int y = 0; y < dy; y++) {
-		for (int x = 0; x < dx; x++) {
-			fprintf(file, "%d\n", color_converter(grid_source[dx * y + x]));
+        for (int x = 0; x < dx; x++) {
+            fprintf(file, "%d\n", color_converter(grid_source[dx * y + x]));
         }
     }
     fflush(file);
