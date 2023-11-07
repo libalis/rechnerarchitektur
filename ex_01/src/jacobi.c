@@ -6,9 +6,9 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 	// Update cells
 	for (uint32_t dy = 1; dy < y - 1; dy++) {
 		for (uint32_t dx = 1; dx < x - 1; dx++) {
-			grid_target[dy * x + dx] = grid_source[(dy - 1) * x + dx] + grid_source[dy * x + (dx - 1)]
+			grid_target[dy * x + dx] = grid_source[(dy - 1) * x + dx] + grid_source[dy * x + (dx - 1)];
 			grid_target[dy * x + dx] += grid_source[dy * x + (dx + 1)] + grid_source[(dy + 1) * x + dx];
-			grid_target /= 4;
+			grid_target[dy * x + dx] /= 4;
 		}
 	}
 	// Switch the pointers for next iteration

@@ -1,4 +1,5 @@
 #define _POSIX_C_SOURCE 199309L
+#include <stdio.h>
 #include "draw.h"
 
 // If you want you can use the provided struct and static function
@@ -41,9 +42,10 @@ void draw_grid(double* grid, uint32_t x, uint32_t y, const char* filepath) {
     // Close file
     FILE* file = fopen("result.ppm", "w");
     fprintf(file, "P3\n%d %d\n%d\n", x, y, 255);
-    for (int y = 0; y < dy; y++) {
-        for (int x = 0; x < dx; x++) {
-            fprintf(file, "%d\n", color_converter(grid_source[dx * y + x]));
+    for (int dy = 0; dy < y; dy++) {
+        for (int dx = 0; dx < x; dx++) {
+            COLOR tmp = color_converter(grid[dx * y + x]);
+            fprintf(file, "%d %d %d\n", tmp.r, tmp.g, tmp.b);
         }
     }
     fflush(file);

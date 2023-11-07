@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
-#include "vec_sum.h"
+#include "jacobi.h"
 #include "get_time.h"
 
 static void usage_msg(void) {
@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
 	dy = strtold(argv[1], NULL);
 
 	//TODO: allocate memory and initialize it
-	double *grid_source = _mm_malloc(dx * dy * sizeof(double));
-	double *grid_target = _mm_malloc(dx * dy * sizeof(double));
+	double *grid_source = _mm_malloc(dx * dy * sizeof(double), 64);
+	double *grid_target = _mm_malloc(dx * dy * sizeof(double), 64);
 
 	for (int y = 0; y < dy; y++) {
 		for (int x = 0; x < dx; x++) {
