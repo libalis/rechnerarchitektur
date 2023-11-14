@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include "jacobi.h"
 #include "get_time.h"
+#include "draw.h"
 
 static void usage_msg(void) {
 	fprintf(stderr, "Usage: ./vecSum <array size in kiB> <minimal runtime in milliseconds>\n");
@@ -52,10 +53,15 @@ int main(int argc, char *argv[]) {
 		for(uint64_t i = 0u; i < runs; i++) {
 			// TODO
 			jacobi(grid_source, grid_target, dx, dy);
+			// Switch the pointers for next iteration könnte man in der main tauschen
+			double* tmp = grid_source; 
+			grid_source = grid_target;
+			grid_target = tmp;
 		}
 		stop  = get_time_us();
 		actual_runtime = stop - start;
 	}
+	draw_grid(grid_source, dx, dy, "result.ppm");
 
 	//TODO: calculate and print
 	mega_updates_per_second = ((runs>>1u)*((dy-1)*(dx-1)))/(double)actual_runtime;

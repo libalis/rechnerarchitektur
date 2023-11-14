@@ -11,8 +11,5 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 			grid_target[dy * x + dx] /= 4;
 		}
 	}
-	// Switch the pointers for next iteration
-	double* tmp = grid_source;
-	grid_source = grid_target;
-	grid_target = tmp;
+	
 }

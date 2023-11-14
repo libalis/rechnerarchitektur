@@ -40,13 +40,13 @@ void draw_grid(double* grid, uint32_t x, uint32_t y, const char* filepath) {
     // Write header with meta information
     // Write RGB data
     // Close file
-    FILE* file = fopen("result.ppm", "w");
-    fprintf(file, "P3\n%d %d\n%d\n", x, y, 255);
+    FILE* file = fopen(filepath, "w");
+    fprintf(file, "P3\n%d %d\n%d\n", x, y, 256);
     for (int dy = 0; dy < y; dy++) {
         for (int dx = 0; dx < x; dx++) {
             COLOR tmp = color_converter(grid[dx * y + x]);
             fprintf(file, "%d %d %d\n", tmp.r, tmp.g, tmp.b);
-        }
+        } //sonst u oder c
     }
     fflush(file);
     fclose(file);

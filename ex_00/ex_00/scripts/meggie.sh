@@ -13,7 +13,7 @@ set -v
 module load intel
 
 # TODO allocate a compute node
-salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
+#salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
 
 # This line creates / overrides a result csv file
 echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result.csv
