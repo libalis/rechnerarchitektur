@@ -9,8 +9,8 @@ INC_PATH  := $(SRC_PATH)/include
 INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
-CC      := gcc
-CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3 #-xHost
+CC      := icc
+CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3 -xHost
 
 LDFLAGS :=
 

@@ -8,11 +8,7 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 		for (uint32_t dx = 1; dx < x - 1; dx++) {
 			grid_target[dy * x + dx] = grid_source[(dy - 1) * x + dx] + grid_source[dy * x + (dx - 1)];
 			grid_target[dy * x + dx] += grid_source[dy * x + (dx + 1)] + grid_source[(dy + 1) * x + dx];
-			grid_target[dy * x + dx] /= 4;
+			grid_target[dy * x + dx] *= 0.25;
 		}
 	}
-	// Switch the pointers for next iteration
-	double* tmp = grid_source;
-	grid_source = grid_target;
-	grid_target = tmp;
 }
