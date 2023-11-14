@@ -11,8 +11,4 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 			grid_target[dy * x + dx] *= 0.25;
 		}
 	}
-<<<<<<< HEAD
-	
-=======
->>>>>>> origin
 }
