@@ -16,11 +16,7 @@ module load intel
 #salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
 
 # This line creates / overrides a result csv file
-echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result.csv
-echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result_2.csv
-echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result_3.csv
-echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result_4.csv
-echo "ArraySize,AdditionsPerSecond,ActualRuntime,MinimalRuntime" > result_8.csv
+echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result.csv
 
 # TODO run benchmark 1
 # execute measurement with for loop
@@ -35,11 +31,15 @@ for ((i = 0; i < 32; i++)); do
     done
 done
 
+echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result_2.csv
+
 for ((i = 0; i < 32; i++)); do
     for j in {1..20}; do
         srun ../bin/vecSum_2 $(bc <<< "1.462449973 ^ $i") 1000 >> result_2.csv
     done
 done
+
+echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result_3.csv
 
 for ((i = 0; i < 32; i++)); do
     for j in {1..20}; do
@@ -47,11 +47,15 @@ for ((i = 0; i < 32; i++)); do
     done
 done
 
+echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result_4.csv
+
 for ((i = 0; i < 32; i++)); do
     for j in {1..20}; do
         srun ../bin/vecSum_4 $(bc <<< "1.462449973 ^ $i") 1000 >> result_4.csv
     done
 done
+
+echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result_8.csv
 
 for ((i = 0; i < 32; i++)); do
     for j in {1..20}; do
