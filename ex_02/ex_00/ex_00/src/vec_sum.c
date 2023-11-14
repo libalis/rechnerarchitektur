@@ -131,4 +131,5 @@ float vec_sum(float *array, uint32_t length) {
 		return sum[0];
 		}
  	#endif
+	return -1;
 }

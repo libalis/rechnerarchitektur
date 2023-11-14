@@ -17,7 +17,6 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 				grid_target[dy * x + dx] += grid_source[dy * x + (dx + 1)] + grid_source[(dy + 1) * x + dx];
 				grid_target[dy * x + dx] *= 0.25;
 			}
-		}
 		#elif NUMBER == 2
 			uint32_t remainder = (x-1) % 2;
 			#pragma novector
@@ -55,7 +54,7 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 
 				grid_target[dy * x + dx+3] = grid_source[(dy - 1) * x + (dx+3)] + grid_source[dy * x + (dx+3 - 1)];
 				grid_target[dy * x + dx+3] += grid_source[dy * x + (dx+3 + 1)] + grid_source[(dy + 1) * x + (dx+3)];
-				grid_target[dy * x + dx+3] *= 0.25
+				grid_target[dy * x + dx+3] *= 0.25;
 			}
 			if(remainder == 1) {
 				grid_target[dy * x + x-2] = grid_source[(dy - 1) * x + (x-2)] + grid_source[dy * x + (x-2)];
@@ -85,4 +84,5 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 				grid_target[dy * x + x-4] *= 0.25;
 			}
 		#endif
+	}
 }
