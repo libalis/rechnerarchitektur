@@ -3,7 +3,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --exclusive
 #SBATCH --cpu-freq=2200000
-#SBATCH -t 02:00:00
+#SBATCH -t 06:00:00
 
 # Enable debug and verbose mode
 set -x
@@ -17,6 +17,8 @@ module load intel
 
 # This line creates / overrides a result csv file
 echo "EdgeSize,MegaUpdatesPerSecond,ActualRuntime" > result.csv
+echo "EdgeSize,MegaUpdatesPerSecond,ActualRuntime" > result_2.csv
+echo "EdgeSize,MegaUpdatesPerSecond,ActualRuntime" > result_4.csv
 
 # TODO run benchmark 1
 # execute measurement with for loop

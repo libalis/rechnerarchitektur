@@ -20,6 +20,10 @@ clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
 vecSum: $(BIN_PATH)/vecSum
+vecSum_2: $(BIN_PATH)/vecSum_2
+vecSum_3: $(BIN_PATH)/vecSum_3
+vecSum_4: $(BIN_PATH)/vecSum_4
+vecSum_8: $(BIN_PATH)/vecSum_8
 
 $(BIN_PATH)/vecSum: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)

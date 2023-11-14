@@ -20,6 +20,8 @@ clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
 jacobi: $(BIN_PATH)/jacobi
+jacobi_2: $(BIN_PATH)/jacobi_2
+jacobi_4: $(BIN_PATH)/jacobi_4
 
 $(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
