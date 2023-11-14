@@ -27,13 +27,21 @@ $(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jaco
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BIN_PATH)/jacobi_2: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/jacobi_2: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi_2.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=2 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BIN_PATH)/jacobi_4: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
+$(BUILD_PATH)/jacobi_2.o: $(SRC_PATH)/jacobi.c
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=4 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) -DNUMBER=2 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(BIN_PATH)/jacobi_4: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi_4.o $(BUILD_PATH)/get_time.o
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+$(BUILD_PATH)/jacobi_4.o: $(SRC_PATH)/jacobi.c
+	mkdir -p $(dir $@)
+	$(CC) -DNUMBER=4 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

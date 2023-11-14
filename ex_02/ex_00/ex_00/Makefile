@@ -29,21 +29,37 @@ $(BIN_PATH)/vecSum: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/g
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BIN_PATH)/vecSum_2: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/vecSum_2: $(BUILD_PATH)/main.o $(BUILD_PATH)/vecSum_2.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=2 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BIN_PATH)/vecSum_3: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/get_time.o
+$(BUILD_PATH)/vecSum_2.o: $(SRC_PATH)/vec_sum.c
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=3 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) -DNUMBER=2 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
-$(BIN_PATH)/vecSum_4: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/vecSum_3: $(BUILD_PATH)/main.o $(BUILD_PATH)/vecSum_3.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=4 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BIN_PATH)/vecSum_8: $(BUILD_PATH)/main.o $(BUILD_PATH)/vec_sum.o $(BUILD_PATH)/get_time.o
+$(BUILD_PATH)/vecSum_3.o: $(SRC_PATH)/vec_sum.c
 	mkdir -p $(dir $@)
-	$(CC) -DNUMBER=8 $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) -DNUMBER=3 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(BIN_PATH)/vecSum_4: $(BUILD_PATH)/main.o $(BUILD_PATH)/vecSum_4.o $(BUILD_PATH)/get_time.o
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+$(BUILD_PATH)/vecSum_4.o: $(SRC_PATH)/vec_sum.c
+	mkdir -p $(dir $@)
+	$(CC) -DNUMBER=4 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(BIN_PATH)/vecSum_8: $(BUILD_PATH)/main.o $(BUILD_PATH)/vecSum_8.o $(BUILD_PATH)/get_time.o
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+$(BUILD_PATH)/vecSum_8.o: $(SRC_PATH)/vec_sum.c
+	mkdir -p $(dir $@)
+	$(CC) -DNUMBER=8 $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

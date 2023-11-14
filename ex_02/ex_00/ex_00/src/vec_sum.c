@@ -43,7 +43,7 @@ float vec_sum(float *array, uint32_t length) {
 		}
 		return sum[0];
 	#elif NUMBER == 4
-		float sum[3] = { 0.0f, 0.0f, 0.0f, 0.0f};
+		float sum[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		uint32_t remainder = length % 4;
 		#pragma novector
 		#pragma nounroll
@@ -68,7 +68,7 @@ float vec_sum(float *array, uint32_t length) {
 		}
 		return sum[0];
 	#elif NUMBER == 8
-		float sum[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+		float sum[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		uint32_t remainder = length % 8;
 		#pragma novector
 		#pragma nounroll
@@ -129,5 +129,6 @@ float vec_sum(float *array, uint32_t length) {
 			sum[0] += array[length-6];
 			sum[0] += array[length-7];
 		return sum[0];
+		}
  	#endif
 }
