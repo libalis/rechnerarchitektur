@@ -3,7 +3,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --exclusive
 #SBATCH --cpu-freq=2200000
-#SBATCH -t 06:00:00
+#SBATCH -t 04:00:00
 
 # Enable debug and verbose mode
 set -x
