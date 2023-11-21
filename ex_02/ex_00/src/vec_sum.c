@@ -10,14 +10,14 @@ float vec_sum(float *array, uint32_t length) {
 		float ret = 0.0f;
 		#pragma novector
 		#pragma nounroll
-		for (int i = 0; i < length; i++) ret += array[i];
+		for (uint32_t i = 0; i < length; i++) ret += array[i];
 		return ret;
 	#elif NUMBER == 2
 		float sum[2] = { 0.0f, 0.0f };
 		uint32_t remainder = length % 2;
 		#pragma novector
 		#pragma nounroll
-		for (int i = 0; i < length-remainder; i+=2) {
+		for (uint32_t i = 0; i < length-remainder; i+=2) {
 			sum[0] += array[i];
 			sum[1] += array[i+1];
 		}
@@ -29,7 +29,7 @@ float vec_sum(float *array, uint32_t length) {
 		uint32_t remainder = length % 3;
 		#pragma novector
 		#pragma nounroll
-		for (int i = 0; i < length-remainder; i+=3) {
+		for (uint32_t i = 0; i < length-remainder; i+=3) {
 			sum[0] += array[i];
 			sum[1] += array[i+1];
 			sum[2] += array[i+2];
@@ -47,7 +47,7 @@ float vec_sum(float *array, uint32_t length) {
 		uint32_t remainder = length % 4;
 		#pragma novector
 		#pragma nounroll
-		for (int i = 0; i < length-remainder; i+=4) {
+		for (uint32_t i = 0; i < length-remainder; i+=4) {
 			sum[0] += array[i];
 			sum[1] += array[i+1];
 			sum[2] += array[i+2];
@@ -72,7 +72,7 @@ float vec_sum(float *array, uint32_t length) {
 		uint32_t remainder = length % 8;
 		#pragma novector
 		#pragma nounroll
-		for (int i = 0; i < length-remainder; i+=4) {
+		for (uint32_t i = 0; i < length-remainder; i+=4) {
 			sum[0] += array[i];
 			sum[1] += array[i+1];
 			sum[2] += array[i+2];

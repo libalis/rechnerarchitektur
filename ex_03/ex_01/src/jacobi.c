@@ -25,7 +25,7 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 			double m = 0.25;
 			#pragma novector
 			#pragma nounroll
-			for (int dx = 1; dx < x-remainder-1; dx+=2) {
+			for (uint32_t dx = 1; dx < x-remainder-1; dx+=2) {
 				accu = _mm_loadu_pd(&grid_source[(dy - 1) * x + dx]);
 				result = _mm_add_pd(result, accu);
 				accu = _mm_loadu_pd(&grid_source[dy * x + (dx - 1)]);
@@ -50,7 +50,7 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 			double m = 0.25;
 			#pragma novector
 			#pragma nounroll
-			for (int dx = 1; dx < x-remainder-1; dx+=4) {
+			for (uint32_t dx = 1; dx < x-remainder-1; dx+=4) {
 				accu = _mm256_loadu_pd(&grid_source[(dy - 1) * x + dx]);
 				result = _mm256_add_pd(result, accu);
 				accu = _mm256_loadu_pd(&grid_source[dy * x + (dx - 1)]);
