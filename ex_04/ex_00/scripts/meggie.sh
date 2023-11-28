@@ -28,5 +28,5 @@ echo "ArraySize,AdditionsPerSecond,ActualRuntime" > result.csv
 srun ../bin/vecSum 1000 1000 >> result.csv
 
 # Note: copy the result.csv to a local machine!
+gprof ../bin/vecSum ./gmon.out > gprof.txt
 touch ready
-gprof ../bin/vecSum ./gmon.out

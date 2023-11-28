@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 			double* tmp = grid_source;
 			grid_source = grid_target;
 			grid_target = tmp;
-			// Don't Draw
+			// Draw
 			// if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
 		}
 		stop  = get_time_us();
