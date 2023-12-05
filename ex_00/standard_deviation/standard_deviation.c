@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     double variance;
     double standard_deviation;
 
-    in = fopen("../ex_00/scripts/result.csv", "r");
+    in = fopen("../vec_sum/scripts/result.csv", "r");
     out = fopen("standard_deviation.csv", "w");
     fprintf(out, "MinimalRuntime,StandardDeviation\n");
     index = 0;

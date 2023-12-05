@@ -1,4 +1,4 @@
-.PHONY: all clean vecSum
+.PHONY: all clean vecSum vecSum_2 vecSum_3 vecSum_4 vecSum_8
 
 ROOT_PATH  := .
 SRC_PATH   := $(ROOT_PATH)/src
@@ -10,7 +10,7 @@ INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
 CC      := icc
-CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3 -pg
+CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3
 
 LDFLAGS :=
 
