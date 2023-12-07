@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 			grid_source = grid_target;
 			grid_target = tmp;
 			// Draw
-			// if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
+			if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm"); // debug
 		}
 		stop  = get_time_us();
 		actual_runtime = stop - start;
