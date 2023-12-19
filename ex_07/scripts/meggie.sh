@@ -43,7 +43,7 @@ done
 
 for ((i = 1; i <= 10; i++)); do
     make -C .. clean
-    make -C .. THREADS="-DTHREADS=$i"
+    make -C .. THREADS="-DTHREADS=$(($i+10))"
     srun likwid-pin -c E:S0:10:1:1@S1:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
 done
 

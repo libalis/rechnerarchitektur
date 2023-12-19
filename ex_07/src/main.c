@@ -30,22 +30,22 @@ static void usage_msg(void) {
 int y_range[THREADS + 1];
 
 void linspace(int a, int b, int n) {
-    int c, i;
-    /* make sure number of points and array are valid */
-    if (n < 2 || y_range == 0)
+	int c, i;
+	/* make sure number of points and array are valid */
+	if (n < 2 || y_range == 0) {
 		if (n == 1) {
 			y_range[0] = a;
 			y_range[1] = b;
 		}
-        return;
-    /* step size */
-    c = (b - a)/(n - 1);
+		return;
+	}
+	/* step size */
+	c = (b - a)/(n - 1);
 	if (c == 0) c = 1;
-    /* fill vector */
-    for (i = 0; i < n - 1; i++)
-        y_range[i] = a + i * c;
-    /* fix last entry to b */
-    y_range[n - 1] = b;
+	/* fill vector */
+	for (i = 0; i < n - 1; i++) y_range[i] = a + i * c;
+	/* fix last entry to b */
+	y_range[n - 1] = b;
 }
 
 // Function to be executed by each thread
