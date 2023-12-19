@@ -10,12 +10,11 @@ INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
 CC      := icc
-CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3
+CFLAGS  := -Wall -pedantic -Werror -std=c11 -O3
 
 LDFLAGS :=
 
-BY := -DBY=6000
-BX := -DBX=6000
+THREADS := -DTHREADS=1
 
 all: jacobi
 
@@ -30,7 +29,7 @@ $(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jaco
 
 $(BUILD_PATH)/jacobi.o: $(SRC_PATH)/jacobi.c
 	mkdir -p $(dir $@)
-	$(CC) $(BY) $(BX) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(THREADS) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

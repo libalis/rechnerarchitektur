@@ -15,8 +15,8 @@ module load intel
 # TODO allocate a compute node
 #salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
 
-for x in 10 20 40 100 200 400; do
-for y in 10 20 40 100 200 400; do
+for x in 768; do
+for y in 50; do
 
 make -C .. clean
 make -C .. BX="-DBX=$x" BY="-DBY=$y"

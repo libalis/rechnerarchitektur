@@ -14,8 +14,8 @@ CFLAGS  := -Wall -pedantic -Werror -std=c99 -O3
 
 LDFLAGS :=
 
-BY := -DBY=6000
-BX := -DBX=6000
+BX := -DBX=768
+BY := -DBY=50
 
 all: jacobi
 
@@ -30,7 +30,7 @@ $(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jaco
 
 $(BUILD_PATH)/jacobi.o: $(SRC_PATH)/jacobi.c
 	mkdir -p $(dir $@)
-	$(CC) $(BY) $(BX) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(BX) $(BY) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

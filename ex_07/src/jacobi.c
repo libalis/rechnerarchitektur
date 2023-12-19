@@ -2,22 +2,23 @@
 #include <immintrin.h>
 #include "jacobi.h"
 
-#ifndef BY
-	#define BY (6000)
-#endif
 #ifndef BX
-	#define BX (6000)
+	#define BX (768)
+#endif
+#ifndef BY
+	#define BY (50)
 #endif
 
-void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
+void jacobi_subgrid(double* grid_source, double* grid_target, uint32_t x, uint32_t y, uint32_t y_min, uint32_t y_max) {
 	// TODO implement
 	// Update cells
-	uint32_t remainder = (x-2) % 4;
-	uint32_t condition_y = y/BY+1;
+	uint32_t remainder = (x-2)%4;
+	uint32_t condition_y = (y_max-y_min)/BY+1;
 	uint32_t condition = x/BX+1;
-	for (uint32_t ib_y = 0; ib_y < condition_y; ib_y++) {
+	if (y_min == 0) y_min = 1;
+	for (uint32_t ib_y = y_min; ib_y < condition_y; ib_y++) {
 		for (uint32_t ib = 0; ib < condition; ib++) {
-			for (uint32_t dy = ib_y*BY+1; dy < (ib_y+1)*BY+1 && dy < y-1; dy++) {
+			for (uint32_t dy = ib_y*BY+1; dy < (ib_y+1)*BY+1 && dy < y-1 && dy < y_max; dy++) {
 				#pragma novector
 				#pragma nounroll
 				for (uint32_t dx = ib*BX+1; dx < (ib+1)*BX+1 && dx < x-4; dx+=4) {
@@ -38,21 +39,21 @@ void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 		}
 	}
 	if (remainder >= 1) {
-		for (uint32_t dy = 1; dy < y-1; dy++) {
+		for (uint32_t dy = y_min; dy < y-1 && dy < y_max; dy++) {
 			grid_target[dy * x + x-2] = grid_source[(dy - 1) * x + (x-2)] + grid_source[dy * x + (x-2)];
 			grid_target[dy * x + x-2] += grid_source[dy * x + (x-2)] + grid_source[(dy + 1) * x + (x-2)];
 			grid_target[dy * x + x-2] *= 0.25;
 		}
 	}
 	if (remainder >= 2) {
-		for (uint32_t dy = 1; dy < y-1; dy++) {
+		for (uint32_t dy = y_min; dy < y-1 && dy < y_max; dy++) {
 			grid_target[dy * x + x-3] = grid_source[(dy - 1) * x + (x-3)] + grid_source[dy * x + (x-3)];
 			grid_target[dy * x + x-3] += grid_source[dy * x + (x-3)] + grid_source[(dy + 1) * x + (x-3)];
 			grid_target[dy * x + x-3] *= 0.25;
 		}
 	}
 	if (remainder == 3) {
-		for (uint32_t dy = 1; dy < y-1; dy++) {
+		for (uint32_t dy = y_min; dy < y-1 && dy < y_max; dy++) {
 			grid_target[dy * x + x-4] = grid_source[(dy - 1) * x + (x-4)] + grid_source[dy * x + (x-4)];
 			grid_target[dy * x + x-4] += grid_source[dy * x + (x-4)] + grid_source[(dy + 1) * x + (x-4)];
 			grid_target[dy * x + x-4] *= 0.25;

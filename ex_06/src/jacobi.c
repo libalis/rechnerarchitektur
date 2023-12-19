@@ -2,17 +2,17 @@
 #include <immintrin.h>
 #include "jacobi.h"
 
-#ifndef BY
-	#define BY (6000)
-#endif
 #ifndef BX
-	#define BX (6000)
+	#define BX (768)
+#endif
+#ifndef BY
+	#define BY (50)
 #endif
 
 void jacobi(double* grid_source, double* grid_target, uint32_t x, uint32_t y) {
 	// TODO implement
 	// Update cells
-	uint32_t remainder = (x-2) % 4;
+	uint32_t remainder = (x-2)%4;
 	uint32_t condition_y = y/BY+1;
 	uint32_t condition = x/BX+1;
 	for (uint32_t ib_y = 0; ib_y < condition_y; ib_y++) {

@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifndef THREADS
+	#define THREADS (1)
+#endif
+
 static void usage_msg(void) {
 	fprintf(stderr, "Usage: ./jacobi <dx> <dy>\n");
 	return;
@@ -53,13 +57,14 @@ int main(int argc, char *argv[]) {
 		start = get_time_us();
 		for(uint64_t i = 0u; i < runs; i++) {
 			// TODO
-			jacobi(grid_source, grid_target, dx, dy);
+			jacobi_subgrid(grid_source, grid_target, 8, 8, 0, 4);
+			jacobi_subgrid(grid_source, grid_target, 8, 8, 4, 8);
 			// Switch the pointers for next iteration
 			double* tmp = grid_source;
 			grid_source = grid_target;
 			grid_target = tmp;
 			// Draw
-			// if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
+			if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
 		}
 		stop  = get_time_us();
 		actual_runtime = stop - start;
@@ -67,7 +72,7 @@ int main(int argc, char *argv[]) {
 
 	//TODO: calculate and print
 	mega_updates_per_second = ((runs>>1u)*((dy-2)*(dx-2)))/(double)actual_runtime;
-	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 "\n", dx, mega_updates_per_second, actual_runtime);
+	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 "\n", THREADS, mega_updates_per_second, actual_runtime);
 
 	_mm_free(grid_source);
 	_mm_free(grid_target);
