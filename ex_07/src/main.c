@@ -1,7 +1,9 @@
+#include "barrier.h"
 #include "draw.h"
 #include "get_time.h"
 #include "jacobi.h"
 #include <inttypes.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,9 +12,54 @@
 	#define THREADS (1)
 #endif
 
+// Struct containing all parameters for a thread
+typedef struct work_package_s {
+	double* grid_source;
+	double* grid_target;
+	uint32_t dx;
+	uint32_t dy;
+	uint32_t runs;
+	uint32_t i;
+} work_package_s;
+
 static void usage_msg(void) {
 	fprintf(stderr, "Usage: ./jacobi <dx> <dy>\n");
 	return;
+}
+
+int y_range[THREADS + 1];
+
+void linspace(int a, int b, int n) {
+    int c, i;
+    /* make sure number of points and array are valid */
+    if (n < 2 || y_range == 0)
+		if (n == 1) {
+			y_range[0] = a;
+			y_range[1] = b;
+		}
+        return;
+    /* step size */
+    c = (b - a)/(n - 1);
+	if (c == 0) c = 1;
+    /* fill vector */
+    for (i = 0; i < n - 1; i++)
+        y_range[i] = a + i * c;
+    /* fix last entry to b */
+    y_range[n - 1] = b;
+}
+
+// Function to be executed by each thread
+void* worker_thread(void* void_args) {
+	work_package_s* args = (work_package_s*) void_args;
+	for (uint32_t i = 0; i < args->runs; i++) {
+		jacobi_subgrid(args->grid_source, args->grid_target,args->dx, args->dy, y_range[args->i], y_range[args->i + 1]);
+		sync_barrier(THREADS);
+		// TODO swap
+		double* tmp = args->grid_source;
+		args->grid_source = args->grid_target;
+		args->grid_target = tmp;
+	}
+	pthread_exit(NULL);
 }
 
 int main(int argc, char *argv[]) {
@@ -32,7 +79,7 @@ int main(int argc, char *argv[]) {
 
 	//TODO: parse parameter: width and height
 	dx = strtold(argv[1], NULL);
-	dy = strtold(argv[1], NULL);
+	dy = strtold(argv[2], NULL);
 
 	//TODO: allocate memory and initialize it
 	double *grid_source = _mm_malloc(dx * dy * sizeof(double), 64);
@@ -53,26 +100,39 @@ int main(int argc, char *argv[]) {
 	//TODO: measurement with a runtime of at least 1 s
 	minimal_runtime = 1 * 1000000;
 
+	// Create thread arguments
+	work_package_s pkgs[THREADS - 1];
+	linspace(0, dy, THREADS + 1);
+	// for loop to initialize pkgs
+	for (int i = 0; i < THREADS - 1; i++) pkgs[i] = (work_package_s){grid_source, grid_target, dx, dy, 0u, i};
+
 	for(runs = 1u; actual_runtime < minimal_runtime; runs = runs << 1u) {
 		start = get_time_us();
+		pthread_t tid[THREADS - 1];
+		for (int i = 0; i < THREADS - 1; i++) {
+			pkgs[i].runs = runs;
+			pthread_create(&tid[i], NULL, &worker_thread, &pkgs[i]);
+		}
 		for(uint64_t i = 0u; i < runs; i++) {
-			// TODO
-			jacobi_subgrid(grid_source, grid_target, 8, 8, 0, 4);
-			jacobi_subgrid(grid_source, grid_target, 8, 8, 4, 8);
+			jacobi_subgrid(grid_source, grid_target, dx, dy, y_range[THREADS - 1], y_range[THREADS]);
+			sync_barrier(THREADS);
 			// Switch the pointers for next iteration
 			double* tmp = grid_source;
 			grid_source = grid_target;
 			grid_target = tmp;
-			// Draw
-			if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
 		}
+		for (int i = 0; i < THREADS - 1; i++) {
+			pthread_join(tid[i], NULL);
+		}
+		// Draw
+		if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
 		stop  = get_time_us();
 		actual_runtime = stop - start;
 	}
 
 	//TODO: calculate and print
 	mega_updates_per_second = ((runs>>1u)*((dy-2)*(dx-2)))/(double)actual_runtime;
-	fprintf(stdout, "%" PRIu64 ",%lf,%" PRIu64 "\n", THREADS, mega_updates_per_second, actual_runtime);
+	fprintf(stdout, "%d,%lf,%" PRIu64 "\n", THREADS, mega_updates_per_second, actual_runtime);
 
 	_mm_free(grid_source);
 	_mm_free(grid_target);

@@ -10,7 +10,7 @@ INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
 CC      := icc
-CFLAGS  := -Wall -pedantic -Werror -std=c11 -O3
+CFLAGS  := -Wall -pedantic -Werror -std=c11 -O3 -lpthread
 
 LDFLAGS :=
 
@@ -23,7 +23,7 @@ clean:
 
 jacobi: $(BIN_PATH)/jacobi
 
-$(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/barrier.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 

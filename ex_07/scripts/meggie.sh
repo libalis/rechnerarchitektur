@@ -3,7 +3,8 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --exclusive
 #SBATCH --cpu-freq=2200000
-#SBATCH -t 04:00:00
+#SBATCH -t 02:00:00
+#SBATCH ––cpus-per-task=20
 
 # Enable debug and verbose mode
 set -x
@@ -13,7 +14,10 @@ set -v
 module load intel
 
 # TODO allocate a compute node
-#salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00
+#salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00 ––cpus-per-task=20
+
+# This line creates / overrides a result csv file
+echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result.csv
 
 # TODO run benchmark 1
 # execute measurement with for loop
@@ -22,22 +26,25 @@ module load intel
 # input parameter:
 # to run an executable:
 # 	srun ../bin/vecSum [size of the vector in KiB]
+for ((i = 1; i <= 20; i++)); do
+    make -C .. clean
+    make -C .. THREADS="-DTHREADS=$i"
+    srun ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result.csv
+done
+
+# This line creates / overrides a result csv file
+echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result_pinned.csv
+
 for ((i = 1; i <= 10; i++)); do
     make -C .. clean
     make -C .. THREADS="-DTHREADS=$i"
-
-    # This line creates / overrides a result csv file
-    echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result_threads=${i}.csv
-    srun likwid-pin -c E:S0:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_threads=${x}.csv
+    srun likwid-pin -c E:S0:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
 done
 
 for ((i = 1; i <= 10; i++)); do
     make -C .. clean
     make -C .. THREADS="-DTHREADS=$i"
-
-    # This line creates / overrides a result csv file
-    echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result_threads=$(($i + 10)).csv
-    srun likwid-pin -c E:S0:10:1:1@S1:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_threads=$(($i + 10)).csv
+    srun likwid-pin -c E:S0:10:1:1@S1:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
 done
 
 # Note: copy the result.csv to a local machine!

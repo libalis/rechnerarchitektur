@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
 	//TODO: parse parameter: width and height
 	dx = strtold(argv[1], NULL);
-	dy = strtold(argv[1], NULL);
+	dy = strtold(argv[2], NULL);
 
 	//TODO: allocate memory and initialize it
 	double *grid_source = _mm_malloc(dx * dy * sizeof(double), 64);
