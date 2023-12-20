@@ -4,7 +4,7 @@
 #SBATCH --exclusive
 #SBATCH --cpu-freq=2200000
 #SBATCH -t 02:00:00
-#SBATCH ––cpus-per-task=20
+#SBATCH --tasks-per-node=20
 
 # Enable debug and verbose mode
 set -x
@@ -12,9 +12,10 @@ set -v
 
 # Load module with icc compiler
 module load intel
+module load likwid
 
 # TODO allocate a compute node
-#salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00 ––cpus-per-task=20
+#salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00 --tasks-per-node=20
 
 # This line creates / overrides a result csv file
 echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result.csv

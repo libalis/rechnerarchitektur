@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 			pthread_join(tid[i], NULL);
 		}
 		// Draw
-		if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
+		// if (access("result.ppm", F_OK) != 0) draw_grid(grid_source, dx, dy, "result.ppm");
 		stop  = get_time_us();
 		actual_runtime = stop - start;
 	}
