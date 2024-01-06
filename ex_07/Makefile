@@ -27,7 +27,7 @@ $(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/barrier.o $(BUILD_PATH)/d
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BUILD_PATH)/jacobi.o: $(SRC_PATH)/jacobi.c
+$(BUILD_PATH)/main.o: $(SRC_PATH)/main.c
 	mkdir -p $(dir $@)
 	$(CC) $(THREADS) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 

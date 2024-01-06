@@ -16,10 +16,10 @@
 typedef struct work_package_s {
 	double* grid_source;
 	double* grid_target;
-	uint32_t dx;
-	uint32_t dy;
-	uint32_t runs;
-	uint32_t i;
+	uint64_t dx;
+	uint64_t dy;
+	uint64_t runs;
+	uint64_t i;
 } work_package_s;
 
 static void usage_msg(void) {
@@ -51,7 +51,7 @@ void linspace(int a, int b, int n) {
 // Function to be executed by each thread
 void* worker_thread(void* void_args) {
 	work_package_s* args = (work_package_s*) void_args;
-	for (uint32_t i = 0; i < args->runs; i++) {
+	for (uint64_t i = 0; i < args->runs; i++) {
 		jacobi_subgrid(args->grid_source, args->grid_target,args->dx, args->dy, y_range[args->i], y_range[args->i + 1]);
 		sync_barrier(THREADS);
 		// TODO swap
@@ -59,6 +59,10 @@ void* worker_thread(void* void_args) {
 		args->grid_source = args->grid_target;
 		args->grid_target = tmp;
 	}
+	pthread_exit(NULL);
+}
+
+void* dummy_thread(void* void_args) {
 	pthread_exit(NULL);
 }
 
@@ -108,10 +112,12 @@ int main(int argc, char *argv[]) {
 
 	for(runs = 1u; actual_runtime < minimal_runtime; runs = runs << 1u) {
 		start = get_time_us();
+		pthread_t dummy_tid;
+		if (runs >= 2) pthread_create(&dummy_tid, NULL, dummy_thread, NULL);
 		pthread_t tid[THREADS - 1];
 		for (int i = 0; i < THREADS - 1; i++) {
 			pkgs[i].runs = runs;
-			pthread_create(&tid[i], NULL, &worker_thread, &pkgs[i]);
+			pthread_create(&tid[i], NULL, worker_thread, &pkgs[i]);
 		}
 		for(uint64_t i = 0u; i < runs; i++) {
 			jacobi_subgrid(grid_source, grid_target, dx, dy, y_range[THREADS - 1], y_range[THREADS]);
@@ -121,6 +127,7 @@ int main(int argc, char *argv[]) {
 			grid_source = grid_target;
 			grid_target = tmp;
 		}
+		if (runs >= 2) pthread_join(dummy_tid, NULL);
 		for (int i = 0; i < THREADS - 1; i++) {
 			pthread_join(tid[i], NULL);
 		}

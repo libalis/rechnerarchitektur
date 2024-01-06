@@ -4,7 +4,7 @@
 #SBATCH --exclusive
 #SBATCH --cpu-freq=2200000
 #SBATCH -t 02:00:00
-#SBATCH --tasks-per-node=20
+##SBATCH --tasks-per-node=20
 
 # Enable debug and verbose mode
 set -x
@@ -12,7 +12,7 @@ set -v
 
 # Load module with icc compiler
 module load intel
-module load likwid
+module load likwid/5.3.0
 
 # TODO allocate a compute node
 #salloc -N 1 --ntasks-per-node=1 --exclusive --cpu-freq=2200000 -t 02:00:00 --tasks-per-node=20
@@ -39,13 +39,13 @@ echo "Threads,MegaUpdatesPerSecond,ActualRuntime" > result_pinned.csv
 for ((i = 1; i <= 10; i++)); do
     make -C .. clean
     make -C .. THREADS="-DTHREADS=$i"
-    srun likwid-pin -c E:S0:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
+    srun likwid-pin -q -c E:S0:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
 done
 
 for ((i = 1; i <= 10; i++)); do
     make -C .. clean
     make -C .. THREADS="-DTHREADS=$(($i+10))"
-    srun likwid-pin -c E:S0:10:1:1@S1:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
+    srun likwid-pin -q -c E:S0:10:1:1@E:S1:$i:1:1 ../bin/jacobi $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((4*1024*1024*1024)/(2*8)))") >> result_pinned.csv
 done
 
 # Note: copy the result.csv to a local machine!
