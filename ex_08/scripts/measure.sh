@@ -1,7 +1,6 @@
 #!/bin/bash -l
-module load intel
 
-sbatch ./meggie.sh
+sbatch.tinygpu ./tinygpu.sh
 
 while [ ! -f ready ]; do
 	sleep 60

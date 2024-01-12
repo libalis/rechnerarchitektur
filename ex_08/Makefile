@@ -1,4 +1,4 @@
-.PHONY: all clean jacobi
+.PHONY: all clean stream
 
 ROOT_PATH  := .
 SRC_PATH   := $(ROOT_PATH)/src
@@ -10,26 +10,20 @@ INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
 CC      := icc
-CFLAGS  := -Wall -pedantic -Werror -std=c11 -O3 -lpthread
+CFLAGS  := -Wall -pedantic -Werror -std=c11 -qopt-streaming-stores always -O3 -fopenmp
 
 LDFLAGS :=
 
-THREADS := -DTHREADS=1
-
-all: jacobi
+all: stream
 
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
-jacobi: $(BIN_PATH)/jacobi
+stream: $(BIN_PATH)/stream
 
-$(BIN_PATH)/jacobi: $(BUILD_PATH)/main.o $(BUILD_PATH)/barrier.o $(BUILD_PATH)/draw.o $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/stream: $(BUILD_PATH)/stream.o
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BUILD_PATH)/main.o: $(SRC_PATH)/main.c
-	mkdir -p $(dir $@)
-	$(CC) $(THREADS) $(INC_FLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)
