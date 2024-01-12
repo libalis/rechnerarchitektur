@@ -20,7 +20,8 @@ NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
 
 COPY_TIME := -DCOPY_TIME=0
 
-all: stream triad
+#all: stream triad
+all: triad
 
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
