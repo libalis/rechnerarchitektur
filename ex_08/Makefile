@@ -18,6 +18,8 @@ NVCC			:= nvcc
 NVCC_CFLAGS		:= -ccbin $(CC)
 NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
 
+COPY_TIME := -DCOPY_TIME=0
+
 all: stream triad
 
 clean:
@@ -31,9 +33,13 @@ $(BIN_PATH)/stream: $(BUILD_PATH)/stream.o
 
 triad: $(BIN_PATH)/triad
 
-$(BIN_PATH)/triad: $(SRC_PATH)/triad.cu $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/triad: $(BUILD_PATH)/triad.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
-	$(NVCC) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(NVCC) $(NVCC_CFLAGS) $^ -o $@ $(LDFLAGS)
+
+$(BUILD_PATH)/triad.o: $(SRC_PATH)/triad.cu
+	mkdir -p $(dir $@)
+	$(NVCC) $(COPY_TIME) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

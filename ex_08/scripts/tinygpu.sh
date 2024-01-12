@@ -42,5 +42,9 @@ srun likwid-pin -q -c E:S0:16:1:1@E:S1:16:1:1 ../bin/stream > 8.1.txt
 
 srun ../bin/triad > 8.2.txt
 
+make -C .. clean
+make -C .. COPY_TIME="-DCOPY_TIME=1"
+srun ../bin/triad > 8.3.txt
+
 # Note: copy the result.csv to a local machine!
 touch ready
