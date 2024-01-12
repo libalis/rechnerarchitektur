@@ -1,4 +1,4 @@
-.PHONY: all clean stream
+.PHONY: all clean stream triad
 
 ROOT_PATH  := .
 SRC_PATH   := $(ROOT_PATH)/src
@@ -14,7 +14,11 @@ CFLAGS  := -Wall -pedantic -Werror -std=c11 -qopt-streaming-stores always -O3 -f
 
 LDFLAGS :=
 
-all: stream
+NVCC			:= nvcc
+NVCC_CFLAGS		:= -ccbin $(CC)
+NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
+
+all: stream triad
 
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
@@ -24,6 +28,12 @@ stream: $(BIN_PATH)/stream
 $(BIN_PATH)/stream: $(BUILD_PATH)/stream.o
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+triad: $(BIN_PATH)/triad
+
+$(BIN_PATH)/triad: $(SRC_PATH)/triad.cu $(BUILD_PATH)/get_time.o
+	mkdir -p $(dir $@)
+	$(NVCC) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)

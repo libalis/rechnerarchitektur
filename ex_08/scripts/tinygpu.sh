@@ -20,12 +20,13 @@ set -v
 # Load module with icc compiler
 module load intel
 module load likwid/5.3.0
+module load cuda
 
 # TODO allocate a compute node
 #salloc
 
 # This line creates / overrides a result csv file
-touch result.txt
+#touch
 
 # TODO run benchmark 1
 # execute measurement with for loop
@@ -36,7 +37,10 @@ touch result.txt
 # 	srun ../bin/vecSum [size of the vector in KiB]
 make -C .. clean
 make -C ..
-srun likwid-pin -q -c E:S0:16:1:1@E:S1:16:1:1 ../bin/stream > result.txt
+
+srun likwid-pin -q -c E:S0:16:1:1@E:S1:16:1:1 ../bin/stream > 8.1.txt
+
+srun ../bin/triad > 8.2.txt
 
 # Note: copy the result.csv to a local machine!
 touch ready
