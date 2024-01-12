@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     cudaMalloc((void**)&device_A, ARRAY_SIZE);
 
     // Call your kernel function to run the STREAM Triad on the GPU
-    // TODO: <<<<blocks, threadsPerBlock>>>
+    // TODO: <<<blocks, threadsPerBlock>>>
     actual_runtime = triad<<<1,1>>>(device_A, device_B, device_C, 0.5, ARRAY_ELEMENTS, actual_runtime);
 
     cudaDeviceSynchronize();
