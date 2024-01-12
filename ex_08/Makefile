@@ -20,12 +20,12 @@ NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
 
 COPY_TIME := -DCOPY_TIME=0
 
-#all: stream triad
-all: triad
+all: stream triad
 
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
+# TODO: incomplete type is not allowed
 stream: $(BIN_PATH)/stream
 
 $(BIN_PATH)/stream: $(BUILD_PATH)/stream.o

@@ -9,7 +9,7 @@
     #define COPY_TIME (0)
 #endif
 
-__global__ void triad(double* A, double* B, double* C, double c, int n, uint64_t actual_runtime) {
+__global__ uint64_t triad(double* A, double* B, double* C, double c, int n, uint64_t actual_runtime) {
     uint64_t start = get_time_us();
 
     for (int i = 0; i < n; ++i) {
@@ -19,8 +19,12 @@ __global__ void triad(double* A, double* B, double* C, double c, int n, uint64_t
     // Measure solely the kernel execution time and calculate the bandwidth
     uint64_t stop = get_time_us();
     actual_runtime += stop - start;
-    double bandwidth = 3.0 * ARRAY_SIZE / actual_runtime;
-    printf("bandwidth: %lf\n", bandwidth);
+    #if COPY_TIME == 0
+        double bandwidth = 3.0 * ARRAY_SIZE / actual_runtime;
+        printf("bandwidth: %lf\n", bandwidth);
+    #endif
+
+    return actual_runtime;
 }
 
 int main(int argc, char *argv[]) {
@@ -28,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     // Allocate and initialize the arrays B and C in the CPU memory and then copy them into
     // the GPU memory
+    // TODO: _mm_malloc
     double* B = _mm_malloc(ARRAY_SIZE, 64);
     double* C = _mm_malloc(ARRAY_SIZE, 64);
 
@@ -50,12 +55,14 @@ int main(int argc, char *argv[]) {
         actual_runtime += stop - start;
     #endif
 
+    // TODO: _mm_malloc
     double* A = _mm_malloc(ARRAY_SIZE, 64);
     double* device_A;
     cudaMalloc((void**)&device_A, ARRAY_SIZE);
 
     // Call your kernel function to run the STREAM Triad on the GPU
-    triad<<<1,1>>>(device_A, device_B, device_C, 0.5, ARRAY_ELEMENTS, actual_runtime);
+    // TODO: <<<<blocks, threadsPerBlock>>>
+    actual_runtime = triad<<<1,1>>>(device_A, device_B, device_C, 0.5, ARRAY_ELEMENTS, actual_runtime);
 
     cudaDeviceSynchronize();
 
@@ -71,6 +78,8 @@ int main(int argc, char *argv[]) {
     stop = get_time_us();
     #if COPY_TIME == 1
         actual_runtime += stop - start;
+        double bandwidth = 3.0 * ARRAY_SIZE / actual_runtime;
+        printf("bandwidth: %lf\n", bandwidth);
     #endif
 
     for (int i = 0; i < ARRAY_ELEMENTS; ++i) {
@@ -80,6 +89,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // TODO: _mm_free
     _mm_free(A);
     _mm_free(B);
     _mm_free(C);
