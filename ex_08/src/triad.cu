@@ -32,9 +32,8 @@ int main(int argc, char *argv[]) {
 
     // Allocate and initialize the arrays B and C in the CPU memory and then copy them into
     // the GPU memory
-    // TODO: _mm_malloc
-    double* B = _mm_malloc(ARRAY_SIZE, 64);
-    double* C = _mm_malloc(ARRAY_SIZE, 64);
+    double* B = malloc(ARRAY_SIZE);
+    double* C = malloc(ARRAY_SIZE);
 
     for (int i = 0; i < ARRAY_ELEMENTS; i++) {
         B[i] = i + 0.5;
@@ -55,8 +54,7 @@ int main(int argc, char *argv[]) {
         actual_runtime += stop - start;
     #endif
 
-    // TODO: _mm_malloc
-    double* A = _mm_malloc(ARRAY_SIZE, 64);
+    double* A = malloc(ARRAY_SIZE);
     double* device_A;
     cudaMalloc((void**)&device_A, ARRAY_SIZE);
 
@@ -89,10 +87,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // TODO: _mm_free
-    _mm_free(A);
-    _mm_free(B);
-    _mm_free(C);
+    free(A);
+    free(B);
+    free(C);
     cudaFree(device_A);
     cudaFree(device_B);
     cudaFree(device_C);

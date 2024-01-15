@@ -7,10 +7,10 @@
 #SBATCH --gres=gpu:rtx3080:1
 #SBATCH --export=NONE
 
-# do not export environment variables
+# Do not export environment variables
 unset SLURM_EXPORT_ENV
 
-# set number of threads to requested cpus-per-task
+# Set number of threads to requested cpus-per-task
 OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # Enable debug and verbose mode
@@ -22,13 +22,13 @@ module load intel
 module load likwid/5.3.0
 module load cuda
 
-# TODO allocate a compute node
+# Allocate a compute node
 #salloc
 
 # This line creates / overrides a result csv file
 #touch
 
-# TODO run benchmark 1
+# Run benchmark
 # execute measurement with for loop
 # 32 measurement points, exponentially distributed: 4 GiB, each with 1000 ms as minimal runtime
 # results should be appended to the result.csv (see >> operator)

@@ -10,7 +10,7 @@ INC_DIRS  := $(sort $(shell find $(INC_PATH) -type d))
 INC_FLAGS := $(addprefix -iquote ,$(INC_DIRS))
 
 CC      := icc
-CFLAGS  := -Wall -pedantic -Werror -std=c11 -qopt-streaming-stores always -O3 -fopenmp
+CFLAGS  := -Wall -pedantic -Werror -qopt-streaming-stores always -O3 -fopenmp
 
 LDFLAGS :=
 
@@ -25,7 +25,6 @@ all: stream triad
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
-# TODO: incomplete type is not allowed
 stream: $(BIN_PATH)/stream
 
 $(BIN_PATH)/stream: $(BUILD_PATH)/stream.o
