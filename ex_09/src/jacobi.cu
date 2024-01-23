@@ -19,11 +19,8 @@ __global__ void update_grid(double* grid_source, double* grid_target, uint32_t d
 	grid_source = grid_target;
 	grid_target = tmp;
 
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-
-    x++;
-    y++;
+    int x = blockIdx.x * blockDim.x + threadIdx.x + 1;
+    int y = blockIdx.y * blockDim.y + threadIdx.y + 1;
 
     grid_target[y * dx + x] = grid_source[(y - 1) * dx + x] + grid_source[y * dx + (x - 1)];
     grid_target[y * dx + x] += grid_source[y * dx + (x + 1)] + grid_source[(y + 1) * dx + x];
@@ -124,7 +121,7 @@ int main(int argc, char *argv[]) {
     free(grid_target);
     free(verify);
 
-    double bandwidth = 3.0 * dx * dy * sizeof(double) / actual_runtime;
+    double bandwidth = 2.0 * dx * dy * sizeof(double) / actual_runtime;
     printf("%d,%lf\n", MIN_RUNTIME, bandwidth);
 
     return 0;
