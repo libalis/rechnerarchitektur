@@ -15,9 +15,9 @@ extern "C" {
 
 __global__ void update_grid(double* grid_source, double* grid_target, uint32_t dx, uint32_t dy) {
     // Switch the pointers for next iteration
-	double* tmp = grid_source;
-	grid_source = grid_target;
-	grid_target = tmp;
+    double* tmp = grid_source;
+    grid_source = grid_target;
+    grid_target = tmp;
 
     int x = blockIdx.x * blockDim.x + threadIdx.x + 1;
     int y = blockIdx.y * blockDim.y + threadIdx.y + 1;
@@ -31,7 +31,7 @@ __global__ void update_grid(double* grid_source, double* grid_target, uint32_t d
 
 int main(int argc, char *argv[]) {
     uint64_t dx = strtold(argv[1], NULL);
-	uint64_t dy = strtold(argv[2], NULL);
+    uint64_t dy = strtold(argv[2], NULL);
 
     uint64_t start = 0, stop = 0, actual_runtime = 0, runs = 0, runtime = 0;
 
@@ -41,16 +41,16 @@ int main(int argc, char *argv[]) {
     double* grid_target = (double *)malloc(dx * dy * sizeof(double));
 
     for (int y = 0; y < dy; y++) {
-		for (int x = 0; x < dx; x++) {
-			if (y == 0 || x == 0) {
-				grid_source[y * dx + x] = 1.0;
-				grid_target[y * dx + x] = 1.0;
-			} else {
-				grid_source[y * dx + x] = 0.0;
-				grid_target[y * dx + x] = 0.0;
-			}
-		}
-	}
+        for (int x = 0; x < dx; x++) {
+            if (y == 0 || x == 0) {
+                grid_source[y * dx + x] = 1.0;
+                grid_target[y * dx + x] = 1.0;
+            } else {
+                grid_source[y * dx + x] = 0.0;
+                grid_target[y * dx + x] = 0.0;
+            }
+        }
+    }
 
     double* device_grid_source;
     double* device_grid_target;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     #endif
 
     for (int y = 1; y < dy - 1; y++) {
-		for (int x = 1; x < dx - 1; x++) {
+        for (int x = 1; x < dx - 1; x++) {
             if (verify[y * dx + x] != grid_target[y * dx + x]) {
                 printf("verify: failed\n");
                 return 1;
