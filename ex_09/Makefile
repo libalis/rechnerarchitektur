@@ -1,4 +1,4 @@
-.PHONY: all clean stream triad
+.PHONY: all clean jacobi
 
 ROOT_PATH  := .
 SRC_PATH   := $(ROOT_PATH)/src
@@ -20,24 +20,18 @@ NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
 
 COPY_TIME := -DCOPY_TIME=0
 
-all: stream triad
+all: jacobi
 
 clean:
 	rm -rf $(BUILD_PATH) $(BIN_PATH)
 
-stream: $(BIN_PATH)/stream
+jacobi: $(BIN_PATH)/jacobi
 
-$(BIN_PATH)/stream: $(BUILD_PATH)/stream.o
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-triad: $(BIN_PATH)/triad
-
-$(BIN_PATH)/triad: $(BUILD_PATH)/triad.o $(BUILD_PATH)/get_time.o
+$(BIN_PATH)/jacobi: $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
 	mkdir -p $(dir $@)
 	$(NVCC) $(NVCC_CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(BUILD_PATH)/triad.o: $(SRC_PATH)/triad.cu
+$(BUILD_PATH)/jacobi.o: $(SRC_PATH)/jacobi.cu
 	mkdir -p $(dir $@)
 	$(NVCC) $(COPY_TIME) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) -MMD -MP -c $< -o $@
 

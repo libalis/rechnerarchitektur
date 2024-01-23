@@ -37,14 +37,11 @@ module load cuda
 # 	srun ../bin/vecSum [size of the vector in KiB]
 make -C .. clean
 make -C ..
-
-srun likwid-pin -q -c E:S0:16:1:1@E:S1:16:1:1 ../bin/stream > 8.1.txt
-
-srun ../bin/triad > 8.2.txt
+srun ../bin/jacobi > result_without_copy_overhead.txt
 
 make -C .. clean
 make -C .. COPY_TIME="-DCOPY_TIME=1"
-srun ../bin/triad > 8.3.txt
+srun ../bin/jacobi > result_with_copy_overhead.txt
 
 # Note: copy the result.csv to a local machine!
 touch ready
