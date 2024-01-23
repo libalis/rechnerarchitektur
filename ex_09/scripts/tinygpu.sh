@@ -26,7 +26,7 @@ module load cuda
 #salloc
 
 # This line creates / overrides a result csv file
-#touch
+echo "Time,Bandwith" > result_without_copy_overhead.csv
 
 # Run benchmark
 # execute measurement with for loop
@@ -35,13 +35,19 @@ module load cuda
 # input parameter:
 # to run an executable:
 # 	srun ../bin/vecSum [size of the vector in KiB]
-make -C .. clean
-make -C ..
-srun ../bin/jacobi > result_without_copy_overhead.txt
+for i in 100 1000 10000; do
+    make -C .. clean
+    make -C .. MIN_RUNTIME="-DMIN_RUNTIME=$i"
+    srun ../bin/jacobi $(bc <<< "scale=0; sqrt(((3*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((3*1024*1024*1024)/(2*8)))") > result_without_copy_overhead.csv
+done
 
-make -C .. clean
-make -C .. COPY_TIME="-DCOPY_TIME=1"
-srun ../bin/jacobi > result_with_copy_overhead.txt
+echo "Time,Bandwith" > result_with_copy_overhead.csv
+
+for i in 100 1000 10000; do
+    make -C .. clean
+    make -C .. COPY_TIME="-DCOPY_TIME=1" MIN_RUNTIME="-DMIN_RUNTIME=$i"
+    srun ../bin/jacobi $(bc <<< "scale=0; sqrt(((3*1024*1024*1024)/(2*8)))") $(bc <<< "scale=0; sqrt(((3*1024*1024*1024)/(2*8)))") > result_with_copy_overhead.csv
+done
 
 # Note: copy the result.csv to a local machine!
 touch ready

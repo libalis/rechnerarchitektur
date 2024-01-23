@@ -19,6 +19,7 @@ NVCC_CFLAGS		:= -ccbin $(CC)
 NVCC_INC_FLAGS	:= $(addprefix -I ,$(INC_DIRS))
 
 COPY_TIME := -DCOPY_TIME=0
+MIN_RUNTIME := -DMIN_RUNTIME=100
 
 all: jacobi
 
@@ -33,7 +34,7 @@ $(BIN_PATH)/jacobi: $(BUILD_PATH)/jacobi.o $(BUILD_PATH)/get_time.o
 
 $(BUILD_PATH)/jacobi.o: $(SRC_PATH)/jacobi.cu
 	mkdir -p $(dir $@)
-	$(NVCC) $(COPY_TIME) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) -MMD -MP -c $< -o $@
+	$(NVCC) $(COPY_TIME) $(MIN_RUNTIME) $(NVCC_INC_FLAGS) $(NVCC_CFLAGS) -MMD -MP -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(dir $@)
