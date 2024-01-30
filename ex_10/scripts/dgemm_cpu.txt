@@ -1,0 +1,1 @@
+floating-point performance: 634558.621280

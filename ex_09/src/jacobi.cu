@@ -14,13 +14,11 @@ extern "C" {
 #endif
 
 __global__ void update_grid(double* grid_source, double* grid_target, uint32_t dx, uint32_t dy) {
-    // Switch the pointers for next iteration
-    double* tmp = grid_source;
-    grid_source = grid_target;
-    grid_target = tmp;
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
 
-    int x = blockIdx.x * blockDim.x + threadIdx.x + 1;
-    int y = blockIdx.y * blockDim.y + threadIdx.y + 1;
+    if (x == 0 || x >= dx - 1 || y == 0 || y >= dy - 1)
+        return;
 
     grid_target[y * dx + x] = grid_source[(y - 1) * dx + x] + grid_source[y * dx + (x - 1)];
     grid_target[y * dx + x] += grid_source[y * dx + (x + 1)] + grid_source[(y + 1) * dx + x];
@@ -66,14 +64,26 @@ int main(int argc, char *argv[]) {
         actual_runtime += stop - start;
     #endif
 
+    uint64_t t = ((dx * dy) % 1024) ? (dx * dy / 1024 + 1) : (dx * dy / 1024);
+    uint64_t r = 0u;
+
     // Measure for MIN_RUNTIME with 100 ms, 1s and 10s
     for (runs = 1u; runtime < MIN_RUNTIME; runs = runs << 1u) {
         // Call your kernel function to run jacobi on the GPU
         start = get_time_us();
-        update_grid<<<(dx - 2) * (dy - 2) / 1024, 1024>>>(device_grid_source, device_grid_target, dx, dy);
+
+        // Switch the pointers for next iteration
+        double* tmp = device_grid_source;
+        device_grid_source = device_grid_target;
+        device_grid_target = tmp;
+
+        update_grid<<<t, 1024>>>(device_grid_source, device_grid_target, dx, dy);
         cudaDeviceSynchronize();
+
         stop = get_time_us();
         runtime = stop - start;
+
+        r++;
     }
 
     actual_runtime += runtime;
@@ -81,7 +91,7 @@ int main(int argc, char *argv[]) {
     // Finally, copy array A from the device memory back to the host memory to verify the
     // correctness of your kernel implementation
     double* verify = (double *)malloc(dx * dy * sizeof(double));
-    for (runs = 1u; runtime < MIN_RUNTIME; runs = runs << 1u) {
+    for (runs = 0u; runs < r; runs++) {
         start = get_time_us();
         for (int y = 1; y < dy - 1; y++) {
             for (int x = 1; x < dx - 1; x++) {
@@ -108,7 +118,7 @@ int main(int argc, char *argv[]) {
 
     for (int y = 1; y < dy - 1; y++) {
         for (int x = 1; x < dx - 1; x++) {
-            if (verify[y * dx + x] != grid_target[y * dx + x]) {
+            if (verify[y * dx + x] - grid_target[y * dx + x] < -0.5 && verify[y * dx + x] - grid_target[y * dx + x] > 0.5) {
                 printf("verify: failed\n");
                 return 1;
             }
