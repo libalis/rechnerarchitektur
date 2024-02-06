@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
                 m, n, k, alpha, A, k, B, n, beta, C, n);
 
     uint64_t runtime = get_time_us() - start;
-    printf("floating-point performance: %lf\n", 2.0 * m * m * m / runtime);
+    printf("floating-point performance: %lf\n", 2.0 * m * m * m / runtime * 1000000);
 
     //printf("\n Computations completed.\n\n");
 

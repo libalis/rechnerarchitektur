@@ -1,1 +1,1 @@
-floating-point performance: 634558.621280
+floating-point performance: 634558621280

@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     gpu_blas_mmul(d_A, d_B, d_C, nr_rows_A, nr_cols_A, nr_cols_B);
 
     uint64_t runtime = get_time_us() - start;
-    printf("floating-point performance: %lf\n", 2.0 * nr_rows_A * nr_rows_A * nr_rows_A / runtime);
+    printf("floating-point performance: %lf\n", 2.0 * nr_rows_A * nr_rows_A * nr_rows_A / runtime * 1000000);
 
     // Copy (and print) the result on host memory
     /*cudaMemcpy(h_C,d_C,nr_rows_C * nr_cols_C * sizeof(double),cudaMemcpyDeviceToHost);
